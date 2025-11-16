@@ -1,0 +1,642 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Simulateur Construction Villa Maroc 2025</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            padding: 20px;
+            min-height: 100vh;
+        }
+        
+        .container {
+            max-width: 1600px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            overflow: hidden;
+        }
+        
+        .header {
+            background: linear-gradient(135deg, #2c3e50 0%, #34495e 100%);
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+        
+        .header h1 {
+            font-size: 28px;
+            margin-bottom: 10px;
+        }
+        
+        .header p {
+            opacity: 0.9;
+            font-size: 14px;
+        }
+        
+        .content {
+            padding: 30px;
+        }
+        
+        .config-section {
+            background: #f8f9fa;
+            padding: 25px;
+            border-radius: 15px;
+            margin-bottom: 30px;
+        }
+        
+        .config-section h2 {
+            color: #2c3e50;
+            margin-bottom: 20px;
+            font-size: 20px;
+            border-bottom: 3px solid #667eea;
+            padding-bottom: 10px;
+        }
+        
+        .input-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+        
+        .input-group {
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .input-group label {
+            font-weight: 600;
+            color: #34495e;
+            margin-bottom: 8px;
+            font-size: 14px;
+        }
+        
+        .input-group input {
+            padding: 12px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 14px;
+            transition: all 0.3s;
+        }
+        
+        .input-group input:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+        
+        .table-container {
+            overflow-x: auto;
+            margin-bottom: 30px;
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            background: white;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        
+        thead {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+        
+        th {
+            padding: 15px 10px;
+            text-align: left;
+            font-weight: 600;
+            font-size: 12px;
+            text-transform: uppercase;
+        }
+        
+        td {
+            padding: 10px;
+            border-bottom: 1px solid #f0f0f0;
+            font-size: 13px;
+        }
+        
+        tbody tr:hover {
+            background: #f8f9fa;
+        }
+        
+        .category-row {
+            background: #e8eaf6 !important;
+            font-weight: bold;
+            color: #5e35b1;
+        }
+        
+        .subtotal-row {
+            background: #fff3e0 !important;
+            font-weight: bold;
+            color: #e65100;
+        }
+        
+        .total-row {
+            background: #c8e6c9 !important;
+            font-weight: bold;
+            color: #2e7d32;
+            font-size: 15px;
+        }
+        
+        .editable-input {
+            width: 90px;
+            padding: 6px;
+            border: 2px solid #e0e0e0;
+            border-radius: 5px;
+            text-align: right;
+            font-size: 13px;
+            transition: all 0.3s;
+        }
+        
+        .editable-input:focus {
+            outline: none;
+            border-color: #667eea;
+            background: #f0f7ff;
+        }
+        
+        .editable-input.material {
+            border-color: #4caf50;
+        }
+        
+        .editable-input.labor {
+            border-color: #ff9800;
+        }
+        
+        .summary-cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 20px;
+            margin-top: 30px;
+        }
+        
+        .summary-card {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 25px;
+            border-radius: 15px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        }
+        
+        .summary-card h3 {
+            font-size: 14px;
+            opacity: 0.9;
+            margin-bottom: 10px;
+        }
+        
+        .summary-card .amount {
+            font-size: 24px;
+            font-weight: bold;
+        }
+        
+        .btn {
+            border: none;
+            padding: 15px 40px;
+            border-radius: 10px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            margin: 5px;
+        }
+        
+        .btn-export {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+        }
+        
+        .btn-export:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 7px 20px rgba(102, 126, 234, 0.6);
+        }
+        
+        .btn-reset {
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            color: white;
+            box-shadow: 0 5px 15px rgba(245, 87, 108, 0.4);
+        }
+        
+        .btn-reset:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 7px 20px rgba(245, 87, 108, 0.6);
+        }
+        
+        .export-section {
+            text-align: center;
+            margin-top: 30px;
+            padding: 20px;
+        }
+        
+        .legend {
+            background: #fff3cd;
+            padding: 15px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            border-left: 4px solid #ffc107;
+        }
+        
+        .legend h3 {
+            color: #856404;
+            margin-bottom: 10px;
+            font-size: 16px;
+        }
+        
+        .legend p {
+            color: #856404;
+            font-size: 13px;
+            margin: 5px 0;
+        }
+        
+        .legend-item {
+            display: inline-block;
+            margin-right: 20px;
+        }
+        
+        .legend-box {
+            display: inline-block;
+            width: 15px;
+            height: 15px;
+            border-radius: 3px;
+            margin-right: 5px;
+            vertical-align: middle;
+        }
+        
+        .legend-box.material {
+            background: #4caf50;
+        }
+        
+        .legend-box.labor {
+            background: #ff9800;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🏗️ Simulateur de Coût de Construction - Villa 3 Étages</h1>
+            <p>Maroc 2025 | Sous-sol + RDC + 1er Étage | Prix Personnalisables</p>
+        </div>
+        
+        <div class="content">
+            <!-- Configuration -->
+            <div class="config-section">
+                <h2>📐 Configuration du Projet</h2>
+                <div class="input-grid">
+                    <div class="input-group">
+                        <label>Surface Sous-sol (m²)</label>
+                        <input type="number" id="surfaceSousSol" value="100" min="0">
+                    </div>
+                    <div class="input-group">
+                        <label>Surface RDC (m²)</label>
+                        <input type="number" id="surfaceRDC" value="100" min="0">
+                    </div>
+                    <div class="input-group">
+                        <label>Surface 1er Étage (m²)</label>
+                        <input type="number" id="surface1erEtage" value="100" min="0">
+                    </div>
+                    <div class="input-group">
+                        <label>Périmètre Clôture (m)</label>
+                        <input type="number" id="perimetreClature" value="70" min="0">
+                    </div>
+                </div>
+            </div>
+
+            <!-- Légende -->
+            <div class="legend">
+                <h3>💡 Comment utiliser le simulateur ?</h3>
+                <p>
+                    <span class="legend-item">
+                        <span class="legend-box material"></span>
+                        <strong>Prix Matériaux (vert)</strong> : Cliquez pour modifier le prix unitaire des matériaux
+                    </span>
+                    <span class="legend-item">
+                        <span class="legend-box labor"></span>
+                        <strong>Prix Main d'Œuvre (orange)</strong> : Cliquez pour modifier le coût unitaire de la main d'œuvre
+                    </span>
+                </p>
+                <p>Tous les calculs se mettent à jour automatiquement !</p>
+            </div>
+
+            <!-- Tableau des coûts -->
+            <div class="table-container">
+                <table id="costTable">
+                    <thead>
+                        <tr>
+                            <th style="width: 250px;">Poste</th>
+                            <th style="width: 80px;">Unité</th>
+                            <th style="width: 90px;">Quantité</th>
+                            <th style="width: 110px;">Prix Mat. Unit.</th>
+                            <th style="width: 110px;">Prix M.O. Unit.</th>
+                            <th style="width: 110px;">Coût Matériaux</th>
+                            <th style="width: 110px;">Coût M.O.</th>
+                            <th style="width: 110px;">Total</th>
+                        </tr>
+                    </thead>
+                    <tbody id="costTableBody">
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- Résumé -->
+            <div class="summary-cards" id="summaryCards"></div>
+
+            <!-- Export -->
+            <div class="export-section">
+                <button class="btn btn-export" onclick="exportToCSV()">📥 Télécharger le devis (CSV)</button>
+                <button class="btn btn-reset" onclick="resetPrices()">🔄 Réinitialiser les prix</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const defaultCostData = {
+            "GROS ŒUVRE": {
+                "Terrassement et fondations": [
+                    { item: "Terrassement général", unit: "m³", qtyPerM2: 0.3, priceUnit: 80, labor: 40 },
+                    { item: "Semelles filantes béton armé", unit: "m³", qtyPerM2: 0.15, priceUnit: 1200, labor: 400 },
+                    { item: "Longrines béton armé", unit: "m³", qtyPerM2: 0.08, priceUnit: 1400, labor: 450 }
+                ],
+                "Murs et structure": [
+                    { item: "Poteaux béton armé", unit: "m³", qtyPerM2: 0.06, priceUnit: 1500, labor: 500 },
+                    { item: "Murs en parpaings 20cm", unit: "m²", qtyPerM2: 2.5, priceUnit: 75, labor: 35 },
+                    { item: "Chaînage horizontal", unit: "ml", qtyPerM2: 0.8, priceUnit: 180, labor: 70 }
+                ],
+                "Dalle et plancher": [
+                    { item: "Dalle béton armé (15cm)", unit: "m²", qtyPerM2: 1, priceUnit: 350, labor: 120 },
+                    { item: "Poutrelles et hourdis", unit: "m²", qtyPerM2: 1, priceUnit: 280, labor: 90 },
+                    { item: "Chape de compression", unit: "m²", qtyPerM2: 1, priceUnit: 85, labor: 45 }
+                ]
+            },
+            "SECOND ŒUVRE": {
+                "Maçonnerie et cloisonnement": [
+                    { item: "Cloisons intérieures (brique 7cm)", unit: "m²", qtyPerM2: 1.2, priceUnit: 55, labor: 30 },
+                    { item: "Enduit intérieur", unit: "m²", qtyPerM2: 3, priceUnit: 25, labor: 20 },
+                    { item: "Enduit extérieur", unit: "m²", qtyPerM2: 2.5, priceUnit: 30, labor: 25 }
+                ],
+                "Électricité": [
+                    { item: "Installation électrique complète", unit: "m²", qtyPerM2: 1, priceUnit: 120, labor: 80 },
+                    { item: "Tableau électrique", unit: "unité", qtyPerM2: 0.01, priceUnit: 2500, labor: 800 },
+                    { item: "Appareillage (prises, interrupteurs)", unit: "m²", qtyPerM2: 1, priceUnit: 45, labor: 15 }
+                ],
+                "Plomberie": [
+                    { item: "Réseau eau froide/chaude", unit: "m²", qtyPerM2: 1, priceUnit: 85, labor: 65 },
+                    { item: "Évacuation eaux usées", unit: "m²", qtyPerM2: 1, priceUnit: 70, labor: 50 },
+                    { item: "Sanitaires (lavabo, WC, douche)", unit: "unité", qtyPerM2: 0.05, priceUnit: 1800, labor: 400 }
+                ]
+            },
+            "FINITIONS": {
+                "Revêtements sols": [
+                    { item: "Carrelage sol (moyen standing)", unit: "m²", qtyPerM2: 1, priceUnit: 120, labor: 45 },
+                    { item: "Plinthes", unit: "ml", qtyPerM2: 0.4, priceUnit: 25, labor: 10 }
+                ],
+                "Peinture et décoration": [
+                    { item: "Peinture intérieure", unit: "m²", qtyPerM2: 3, priceUnit: 18, labor: 12 },
+                    { item: "Peinture extérieure", unit: "m²", qtyPerM2: 2.5, priceUnit: 22, labor: 15 }
+                ],
+                "Menuiserie": [
+                    { item: "Portes intérieures", unit: "unité", qtyPerM2: 0.08, priceUnit: 1200, labor: 200 },
+                    { item: "Fenêtres aluminium", unit: "m²", qtyPerM2: 0.15, priceUnit: 650, labor: 150 },
+                    { item: "Porte d'entrée blindée", unit: "unité", qtyPerM2: 0.01, priceUnit: 4500, labor: 500 }
+                ]
+            },
+            "ÉTANCHÉITÉ ET TOITURE": {
+                "Toiture": [
+                    { item: "Étanchéité terrasse", unit: "m²", qtyPerM2: 1, priceUnit: 95, labor: 55 },
+                    { item: "Forme de pente", unit: "m²", qtyPerM2: 1, priceUnit: 45, labor: 30 },
+                    { item: "Protection étanchéité", unit: "m²", qtyPerM2: 1, priceUnit: 35, labor: 20 }
+                ]
+            },
+            "CLÔTURE": {
+                "Clôture du terrain": [
+                    { item: "Mur de clôture (parpaings + enduit)", unit: "ml", qtyPerClature: 1, priceUnit: 380, labor: 170 },
+                    { item: "Portail métallique", unit: "unité", qtyPerClature: 0.015, priceUnit: 8500, labor: 1500 }
+                ]
+            }
+        };
+
+        // Copie profonde pour les données de travail
+        let costData = JSON.parse(JSON.stringify(defaultCostData));
+
+        function calculateCosts() {
+            const surfaceSS = parseFloat(document.getElementById('surfaceSousSol').value) || 0;
+            const surfaceRDC = parseFloat(document.getElementById('surfaceRDC').value) || 0;
+            const surface1er = parseFloat(document.getElementById('surface1erEtage').value) || 0;
+            const perimetreClature = parseFloat(document.getElementById('perimetreClature').value) || 0;
+            
+            const totalSurface = surfaceSS + surfaceRDC + surface1er;
+            
+            const tbody = document.getElementById('costTableBody');
+            tbody.innerHTML = '';
+            
+            let grandTotalMaterials = 0;
+            let grandTotalLabor = 0;
+            let grandTotal = 0;
+            let itemIndex = 0;
+
+            for (const [category, subcategories] of Object.entries(costData)) {
+                const categoryRow = tbody.insertRow();
+                categoryRow.className = 'category-row';
+                categoryRow.innerHTML = `<td colspan="8">${category}</td>`;
+                
+                let categoryTotalMaterials = 0;
+                let categoryTotalLabor = 0;
+
+                for (const [subcat, items] of Object.entries(subcategories)) {
+                    for (const item of items) {
+                        const row = tbody.insertRow();
+                        
+                        let quantity;
+                        if (category === "CLÔTURE") {
+                            quantity = item.qtyPerClature * perimetreClature;
+                        } else {
+                            quantity = item.qtyPerM2 * totalSurface;
+                        }
+                        
+                        const materialsCost = quantity * item.priceUnit;
+                        const laborCost = quantity * item.labor;
+                        const totalCost = materialsCost + laborCost;
+                        
+                        categoryTotalMaterials += materialsCost;
+                        categoryTotalLabor += laborCost;
+                        
+                        row.innerHTML = `
+                            <td>${item.item}</td>
+                            <td>${item.unit}</td>
+                            <td>${quantity.toFixed(2)}</td>
+                            <td>
+                                <input type="number" 
+                                       class="editable-input material" 
+                                       value="${item.priceUnit.toFixed(2)}" 
+                                       data-index="${itemIndex}"
+                                       data-type="material"
+                                       step="0.01"
+                                       min="0">
+                            </td>
+                            <td>
+                                <input type="number" 
+                                       class="editable-input labor" 
+                                       value="${item.labor.toFixed(2)}" 
+                                       data-index="${itemIndex}"
+                                       data-type="labor"
+                                       step="0.01"
+                                       min="0">
+                            </td>
+                            <td>${materialsCost.toFixed(2)}</td>
+                            <td>${laborCost.toFixed(2)}</td>
+                            <td><strong>${totalCost.toFixed(2)}</strong></td>
+                        `;
+                        
+                        itemIndex++;
+                    }
+                }
+                
+                const subtotalRow = tbody.insertRow();
+                subtotalRow.className = 'subtotal-row';
+                const categoryTotal = categoryTotalMaterials + categoryTotalLabor;
+                subtotalRow.innerHTML = `
+                    <td colspan="5"><strong>Sous-total ${category}</strong></td>
+                    <td><strong>${categoryTotalMaterials.toFixed(2)}</strong></td>
+                    <td><strong>${categoryTotalLabor.toFixed(2)}</strong></td>
+                    <td><strong>${categoryTotal.toFixed(2)}</strong></td>
+                `;
+                
+                grandTotalMaterials += categoryTotalMaterials;
+                grandTotalLabor += categoryTotalLabor;
+                grandTotal += categoryTotal;
+            }
+            
+            const totalRow = tbody.insertRow();
+            totalRow.className = 'total-row';
+            totalRow.innerHTML = `
+                <td colspan="5"><strong>TOTAL GÉNÉRAL</strong></td>
+                <td><strong>${grandTotalMaterials.toFixed(2)}</strong></td>
+                <td><strong>${grandTotalLabor.toFixed(2)}</strong></td>
+                <td><strong>${grandTotal.toFixed(2)}</strong></td>
+            `;
+            
+            updateSummaryCards(totalSurface, grandTotalMaterials, grandTotalLabor, grandTotal);
+            attachPriceChangeListeners();
+        }
+
+        function attachPriceChangeListeners() {
+            document.querySelectorAll('.editable-input').forEach(input => {
+                input.addEventListener('input', function() {
+                    const index = parseInt(this.dataset.index);
+                    const type = this.dataset.type;
+                    const newValue = parseFloat(this.value) || 0;
+                    
+                    let currentIndex = 0;
+                    for (const category of Object.values(costData)) {
+                        for (const items of Object.values(category)) {
+                            for (const item of items) {
+                                if (currentIndex === index) {
+                                    if (type === 'material') {
+                                        item.priceUnit = newValue;
+                                    } else {
+                                        item.labor = newValue;
+                                    }
+                                    calculateCosts();
+                                    return;
+                                }
+                                currentIndex++;
+                            }
+                        }
+                    }
+                });
+            });
+        }
+
+        function updateSummaryCards(surface, materials, labor, total) {
+            const summaryCards = document.getElementById('summaryCards');
+            const pricePerM2 = surface > 0 ? total / surface : 0;
+            summaryCards.innerHTML = `
+                <div class="summary-card">
+                    <h3>Surface Totale</h3>
+                    <div class="amount">${surface.toFixed(0)} m²</div>
+                </div>
+                <div class="summary-card">
+                    <h3>Coût Matériaux</h3>
+                    <div class="amount">${materials.toFixed(0).replace(/\B(?=(\d{3})+(?!\d))/g, " ")} DH</div>
+                </div>
+                <div class="summary-card">
+                    <h3>Coût Main d'Œuvre</h3>
+                    <div class="amount">${labor.toFixed(0).replace(/\B(?=(\d{3})+(?!\d))/g, " ")} DH</div>
+                </div>
+                <div class="summary-card">
+                    <h3>Coût Total</h3>
+                    <div class="amount">${total.toFixed(0).replace(/\B(?=(\d{3})+(?!\d))/g, " ")} DH</div>
+                </div>
+                <div class="summary-card">
+                    <h3>Prix au m²</h3>
+                    <div class="amount">${pricePerM2.toFixed(0).replace(/\B(?=(\d{3})+(?!\d))/g, " ")} DH</div>
+                </div>
+            `;
+        }
+
+        function resetPrices() {
+            if (confirm('Voulez-vous vraiment réinitialiser tous les prix aux valeurs par défaut ?')) {
+                costData = JSON.parse(JSON.stringify(defaultCostData));
+                calculateCosts();
+            }
+        }
+
+        function exportToCSV() {
+            let csv = 'Poste,Unité,Quantité,Prix Mat. Unit. (MAD),Prix M.O. Unit. (MAD),Coût Matériaux (MAD),Coût M.O. (MAD),Total (MAD)\n';
+            
+            const table = document.getElementById('costTable');
+            const rows = table.querySelectorAll('tbody tr');
+            
+            rows.forEach(row => {
+                const cols = row.querySelectorAll('td');
+                if (cols.length > 0) {
+                    const rowData = [];
+                    cols.forEach((col, idx) => {
+                        if (idx === 3 || idx === 4) {
+                            const input = col.querySelector('input');
+                            if (input) {
+                                rowData.push('"' + input.value + '"');
+                            }
+                        } else {
+                            rowData.push('"' + col.textContent.trim() + '"');
+                        }
+                    });
+                    csv += rowData.join(',') + '\n';
+                }
+            });
+            
+            const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+            const link = document.createElement('a');
+            const url = URL.createObjectURL(blob);
+            link.setAttribute('href', url);
+            link.setAttribute('download', 'devis_construction_villa_personnalise.csv');
+            link.style.visibility = 'hidden';
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+        }
+
+        // Event listeners
+        document.getElementById('surfaceSousSol').addEventListener('input', calculateCosts);
+        document.getElementById('surfaceRDC').addEventListener('input', calculateCosts);
+        document.getElementById('surface1erEtage').addEventListener('input', calculateCosts);
+        document.getElementById('perimetreClature').addEventListener('input', calculateCosts);
+
+        // Calcul initial
+        calculateCosts();
+    </script>
+</body>
+</html>
